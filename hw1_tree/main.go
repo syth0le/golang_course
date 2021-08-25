@@ -1,12 +1,18 @@
 package main
 
 import (
+	"fmt"
+	"path/filepath"
+
 	//"fmt"
 	"io"
+	"io/fs"
+	"io/ioutil"
 	"os"
 	//"path/filepath"
 	//"strings"
 )
+
 
 func main() {
 	out := os.Stdout
@@ -23,7 +29,39 @@ func main() {
 }
 
 func dirTree(out io.Writer, path string, printFiles bool) error {
-	println(out, path, printFiles)
+	//println(out, path, printFiles)
+	dir, _ := ioutil.ReadDir(path)
+
+	for _, elem := range dir {
+
+		_ = toStringRecognizer(elem)
+
+		if elem.IsDir() {
+			levelPath := filepath.Join(path, elem.Name())
+			println("\n"+levelPath)
+
+			dirTree(out, levelPath, printFiles)
+		}
+	}
+
 	return nil
 }
 
+func toStringRecognizer(elem fs.FileInfo) error {
+	if elem == nil{
+		panic("can't get elements from slice")
+	}
+	toReturn := fmt.Sprintf("ELEMENT: name=%s size=%d isDir=%v", elem.Name(), elem.Size(), elem.IsDir())
+	println(toReturn)
+
+	return nil
+}
+
+
+func readDir(){
+
+}
+
+func printDir(){
+
+}
