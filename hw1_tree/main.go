@@ -2,16 +2,12 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"path/filepath"
-	"strings"
-
-	//"fmt"
 	"io"
 	"io/fs"
+	"io/ioutil"
 	"os"
-	//"path/filepath"
-	//"strings"
+	"path/filepath"
+	"strings"
 )
 
 type Node interface {
