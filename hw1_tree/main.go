@@ -14,12 +14,12 @@ type Node interface {
 	fmt.Stringer
 }
 
-type Directory struct{
-	name string
+type Directory struct {
+	name     string
 	children []Node
 }
 
-type File struct{
+type File struct {
 	name string
 	size int64
 }
@@ -51,7 +51,7 @@ func main() {
 
 func dirTree(out io.Writer, path string, printFiles bool) error {
 	//nodes := readDir(out , path, printFiles, []Node{})
-	nodes := readDirectory(path , printFiles, []Node{})
+	nodes := readDirectory(path, printFiles, []Node{})
 	printDirectory(out, nodes, []string{})
 	return nil
 }
@@ -67,7 +67,7 @@ func readDirectory(path string, printFiles bool, nodes []Node) []Node {
 
 		//_ = toStringRecreator(elem)
 
-		switch elem.IsDir(){
+		switch elem.IsDir() {
 		case true:
 			levelPath := filepath.Join(path, elem.Name())
 			children := readDirectory(levelPath, printFiles, []Node{})
@@ -83,7 +83,7 @@ func readDirectory(path string, printFiles bool, nodes []Node) []Node {
 	return nodes
 }
 
-func printDirectory(out io.Writer, nodes []Node, delimeters []string){
+func printDirectory(out io.Writer, nodes []Node, delimeters []string) {
 	if len(nodes) == 0 {
 		return
 	}
@@ -104,9 +104,8 @@ func printDirectory(out io.Writer, nodes []Node, delimeters []string){
 	printDirectory(out, nodes[1:], delimeters)
 }
 
-
-func toStringRecreator (elem fs.FileInfo) error {
-	if elem == nil{
+func toStringRecreator(elem fs.FileInfo) error {
+	if elem == nil {
 		panic("can't get elements from slice")
 	}
 	toReturn := fmt.Sprintf("ELEMENT: name=%s size=%d isDir=%v", elem.Name(), elem.Size(), elem.IsDir())
@@ -114,4 +113,3 @@ func toStringRecreator (elem fs.FileInfo) error {
 
 	return nil
 }
-
