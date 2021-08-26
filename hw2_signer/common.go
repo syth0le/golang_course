@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"hash/crc32"
 	"strconv"
@@ -57,4 +58,16 @@ var DataSignerCrc32 = func(data string) string {
 	dataHash := strconv.FormatUint(uint64(crcH), 10)
 	time.Sleep(time.Second)
 	return dataHash
+}
+
+
+func StringEncoder(data string, isMd bool) string {
+	mdH := md5.Sum([]byte(data))
+	if isMd {
+		mdStr := hex.EncodeToString(mdH[:])
+		crcH := crc32.ChecksumIEEE([]byte(mdStr))
+		return strconv.FormatUint(uint64(crcH), 10)
+	}
+	crcH := crc32.ChecksumIEEE([]byte(data))
+	return strconv.FormatUint(uint64(crcH), 10)
 }
