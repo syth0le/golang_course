@@ -70,7 +70,6 @@ func readDirectory(path string, printFiles bool, nodes []Node) []Node {
 		switch elem.IsDir(){
 		case true:
 			levelPath := filepath.Join(path, elem.Name())
-			//println("\n"+levelPath)
 			children := readDirectory(levelPath, printFiles, []Node{})
 			newNode = Directory{elem.Name(), children}
 		case false:
@@ -90,18 +89,15 @@ func printDirectory(out io.Writer, nodes []Node, delimeters []string){
 	}
 
 	var allDelimeters string = fmt.Sprintf("%s", strings.Join(delimeters, ""))
-	//fmt.Fprintf(out, "%s", strings.Join(delimeters, ""))
 
 	if len(nodes) == 1 {
 		fmt.Fprintf(out, "%s%s%s\n", allDelimeters, "└───", nodes[0])
-		//fmt.Fprintf(out, "%s%s\n", "└───", nodes[0])
 		if directory, ok := nodes[0].(Directory); ok {
 			printDirectory(out, directory.children, append(delimeters, "\t"))
 		}
 		return
 	}
 	fmt.Fprintf(out, "%s%s%s\n", allDelimeters, "├───", nodes[0])
-	//fmt.Fprintf(out, "%s%s\n", "├───", nodes[0])
 	if directory, ok := nodes[0].(Directory); ok {
 		printDirectory(out, directory.children, append(delimeters, "│\t"))
 	}
