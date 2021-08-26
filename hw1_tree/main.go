@@ -55,12 +55,12 @@ func main() {
 
 func dirTree(out io.Writer, path string, printFiles bool) error {
 	//nodes := readDir(out , path, printFiles, []Node{})
-	nodes := readDir(path , printFiles, []Node{})
-	printDir(out, nodes, []string{})
+	nodes := readDirectory(path , printFiles, []Node{})
+	printDirectory(out, nodes, []string{})
 	return nil
 }
 
-func readDir(path string, printFiles bool, nodes []Node) []Node {
+func readDirectory(path string, printFiles bool, nodes []Node) []Node {
 	dir, _ := ioutil.ReadDir(path)
 	var newNode Node
 
@@ -75,7 +75,7 @@ func readDir(path string, printFiles bool, nodes []Node) []Node {
 		case true:
 			levelPath := filepath.Join(path, elem.Name())
 			//println("\n"+levelPath)
-			children := readDir(levelPath, printFiles, []Node{})
+			children := readDirectory(levelPath, printFiles, []Node{})
 			newNode = Directory{elem.Name(), children}
 		case false:
 			newNode = File{elem.Name(), elem.Size()}
@@ -88,7 +88,7 @@ func readDir(path string, printFiles bool, nodes []Node) []Node {
 	return nodes
 }
 
-func printDir(out io.Writer, nodes []Node, delimeters []string){
+func printDirectory(out io.Writer, nodes []Node, delimeters []string){
 	if len(nodes) == 0 {
 		return
 	}
@@ -100,16 +100,16 @@ func printDir(out io.Writer, nodes []Node, delimeters []string){
 		fmt.Fprintf(out, "%s%s%s\n", allDelimeters, "└───", nodes[0])
 		//fmt.Fprintf(out, "%s%s\n", "└───", nodes[0])
 		if directory, ok := nodes[0].(Directory); ok {
-			printDir(out, directory.children, append(delimeters, "\t"))
+			printDirectory(out, directory.children, append(delimeters, "\t"))
 		}
 		return
 	}
 	fmt.Fprintf(out, "%s%s%s\n", allDelimeters, "├───", nodes[0])
 	//fmt.Fprintf(out, "%s%s\n", "├───", nodes[0])
 	if directory, ok := nodes[0].(Directory); ok {
-		printDir(out, directory.children, append(delimeters, "│\t"))
+		printDirectory(out, directory.children, append(delimeters, "│\t"))
 	}
-	printDir(out, nodes[1:], delimeters)
+	printDirectory(out, nodes[1:], delimeters)
 }
 
 
