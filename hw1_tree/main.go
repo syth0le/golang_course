@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"path/filepath"
+	"strings"
+
 	//"fmt"
 	"io"
 	"io/fs"
@@ -53,7 +55,7 @@ func main() {
 
 func dirTree(out io.Writer, path string, printFiles bool) error {
 	nodes := readDir(out , path, printFiles, []Node{})
-	printDir(out, nodes)
+	printDir(out, nodes, []string{})
 	return nil
 }
 
@@ -83,19 +85,21 @@ func readDir(out io.Writer, path string, printFiles bool, nodes []Node) []Node {
 	return nodes
 }
 
-func printDir(out io.Writer, nodes []Node){
+func printDir(out io.Writer, nodes []Node, delimeters []string){
+	var allDelimeters string = fmt.Sprintf("%s", strings.Join(delimeters, ""))
+
 	if len(nodes) == 1 {
-		fmt.Fprintf(out, "%s%s\n", "└───", nodes[0])
+		fmt.Fprintf(out, "%s%s%s\n", allDelimeters, "└───", nodes[0])
 		if directory, ok := nodes[0].(Directory); ok {
-			printDir(out, directory.children)
+			printDir(out, directory.children, append(delimeters, "\t"))
 		}
 		return
 	}
-	fmt.Fprintf(out, "%s%s\n", "├───", nodes[0])
+	fmt.Fprintf(out, "%s%s%s\n", allDelimeters, "├───", nodes[0])
 	if directory, ok := nodes[0].(Directory); ok {
-		printDir(out, directory.children)
+		printDir(out, directory.children, append(delimeters, "\t"))
 	}
-	printDir(out, nodes[1:])
+	printDir(out, nodes[1:], append(delimeters, "\t"))
 }
 
 
