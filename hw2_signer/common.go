@@ -60,7 +60,7 @@ var DataSignerCrc32 = func(data string) string {
 	return dataHash
 }
 
-
+//in, out chan interface{}
 func StringEncoder(data string, isMd bool) string {
 	mdH := md5.Sum([]byte(data))
 	if isMd {
